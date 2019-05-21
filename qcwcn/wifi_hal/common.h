@@ -27,6 +27,7 @@
 #include <fcntl.h>
 #include <inttypes.h>
 #include <sys/socket.h>
+#include <sys/un.h>
 #include <netlink/genl/genl.h>
 #include <netlink/genl/family.h>
 #include <netlink/genl/ctrl.h>
@@ -52,6 +53,8 @@
 #define RECV_BUF_SIZE           (4096)
 #define DEFAULT_EVENT_CB_SIZE   (64)
 #define NUM_RING_BUFS           5
+
+#define WIFI_HAL_CTRL_IFACE     "/dev/socket/wifihal/wifihal_ctrlsock"
 
 #define MAC_ADDR_ARRAY(a) (a)[0], (a)[1], (a)[2], (a)[3], (a)[4], (a)[5]
 #define MAC_ADDR_STR "%02x:%02x:%02x:%02x:%02x:%02x"
@@ -94,15 +97,29 @@ typedef struct {
     size_t flags_len;
 } features_info;
 
+enum pkt_log_version {
+    PKT_LOG_V0          = 0,     // UNSPECIFIED Target
+    PKT_LOG_V1          = 1,     // ROME Base Target
+    PKT_LOG_V2          = 2,     // HELIUM Base Target
+    PKT_LOG_V3          = 3,     // LETHIUM Base target
+};
+
 struct gscan_event_handlers_s;
 struct rssi_monitor_event_handler_s;
 struct cld80211_ctx;
+
+struct ctrl_sock {
+    int s;
+    struct sockaddr_un local;
+};
 
 typedef struct hal_info_s {
 
     struct nl_sock *cmd_sock;                       // command socket object
     struct nl_sock *event_sock;                     // event socket object
     struct nl_sock *user_sock;                      // user socket object
+    struct ctrl_sock wifihal_ctrl_sock;             // ctrl sock object
+    struct list_head monitor_sockets;               // list of monitor sockets
     int nl80211_family_id;                          // family id for 80211 driver
 
     bool in_event_loop;                             // Indicates that event loop is active
@@ -126,6 +143,7 @@ typedef struct hal_info_s {
     u32 supported_logger_feature_set;
     // add other details
     int user_sock_arg;
+    int event_sock_arg;
     struct rb_info rb_infos[NUM_RING_BUFS];
     void (*on_ring_buffer_data) (char *ring_name, char *buffer, int buffer_size,
           wifi_ring_buffer_status *status);
@@ -155,6 +173,7 @@ typedef struct hal_info_s {
     struct cld80211_ctx *cldctx;
     bool apf_enabled;
     bool support_nan_ext_cmd;
+    pkt_log_version  pkt_log_ver;
 } hal_info;
 
 wifi_error wifi_register_handler(wifi_handle handle, int cmd, nl_recvmsg_msg_cb_t func, void *arg);
@@ -178,9 +197,8 @@ wifi_error cleanupRSSIMonitorHandler(hal_info *info);
 lowi_cb_table_t *getLowiCallbackTable(u32 requested_lowi_capabilities);
 
 wifi_error wifi_start_sending_offloaded_packet(wifi_request_id id,
-        wifi_interface_handle iface, u16 ether_type, u8 *ip_packet,
-        u16 ip_packet_len, u8 *src_mac_addr, u8 *dst_mac_addr,
-        u32 period_msec);
+        wifi_interface_handle iface, u8 *ip_packet, u16 ip_packet_len,
+        u8 *src_mac_addr, u8 *dst_mac_addr, u32 period_msec);
 wifi_error wifi_stop_sending_offloaded_packet(wifi_request_id id,
         wifi_interface_handle iface);
 wifi_error wifi_start_rssi_monitoring(wifi_request_id id, wifi_interface_handle
