@@ -889,6 +889,12 @@ wifi_error wifi_initialize(wifi_handle *handle)
         goto unload;
     }
 
+    ret = initializeRadioHandler(info);
+    if (ret != WIFI_SUCCESS) {
+        ALOGE("Initializing Radio Event handler Failed");
+        goto unload;
+    }
+
     ret = wifi_init_tcp_param_change_event_handler(iface_handle);
     if (ret != WIFI_SUCCESS) {
         ALOGE("Initializing TCP param change event Handler Failed");
@@ -928,6 +934,7 @@ unload:
             wifi_logger_ring_buffers_deinit(info);
             cleanupGscanHandlers(info);
             cleanupRSSIMonitorHandler(info);
+            cleanupRadioHandler(info);
 	    cleanupTCPParamCommand(info);
             free(info->event_cb);
             if (info->driver_supported_features.flags) {
@@ -1022,6 +1029,7 @@ static void internal_cleaned_up_handler(wifi_handle handle)
     wifi_logger_ring_buffers_deinit(info);
     cleanupGscanHandlers(info);
     cleanupRSSIMonitorHandler(info);
+    cleanupRadioHandler(info);
     cleanupTCPParamCommand(info);
 
     if (info->num_event_cb)
