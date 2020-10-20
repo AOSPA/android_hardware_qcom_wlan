@@ -53,6 +53,9 @@ soong_config_module_type {
     name: "wifi_hal_cc_defaults",
     module_type: "cc_defaults",
     config_namespace: "wifi",
+    bool_variables: [
+        "target_has_broken_wlan_set_interface", // TARGET_HAS_BROKEN_WLAN_SET_INTERFACE
+    ],
     value_variables: [
         "driver_state_ctrl_param", // WIFI_DRIVER_STATE_CTRL_PARAM
         "driver_state_on", // WIFI_DRIVER_STATE_ON
@@ -71,6 +74,9 @@ wifi_hal_cc_defaults {
         },
         driver_state_on: {
             cflags: ["-DWIFI_DRIVER_STATE_ON=%s"],
+        },
+        target_has_broken_wlan_set_interface: {
+            cflags: ["-DBROKEN_SET_INTERFACE"],
         },
     },
 }
