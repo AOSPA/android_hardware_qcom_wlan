@@ -529,24 +529,18 @@ parse_beacon_ies:
 }
 
 static int parse_get_feature_info(struct resp_info *info, struct nlattr *vendata,
-			      int datalen)
+				  int datalen)
 {
 	struct nlattr *tb_vendor[NUM_QCA_WLAN_VENDOR_FEATURES + 1];
 	struct nlattr *attr;
-	char *result = NULL;
 	nla_parse(tb_vendor, NUM_QCA_WLAN_VENDOR_FEATURES,
 		  vendata, datalen, NULL);
 	attr = tb_vendor[QCA_WLAN_VENDOR_ATTR_FEATURE_FLAGS];
 	if (attr) {
-		int length = snprintf( NULL, 0, "%d", nla_get_u32(attr));
-		result = (char *)malloc(length + 1);
-		if (result != NULL) {
-			memset(result, 0, length + 1);
-			snprintf(result, length + 1, "%d", nla_get_u32(attr));
-			snprintf(info->reply_buf, info->reply_buf_len,
-				 "%s", result);
-			wpa_printf(MSG_DEBUG, "%s: driver supported feature info  = %s", __func__, result);
-		}
+		snprintf(info->reply_buf, info->reply_buf_len, "%u",
+			 nla_get_u32(attr));
+		wpa_printf(MSG_DEBUG, "%s: driver supported feature info  = %s",
+			   __func__, info->reply_buf);
 	} else {
 		snprintf(info->reply_buf, info->reply_buf_len, "FAIL");
 		return -1;
@@ -641,15 +635,13 @@ int wpa_driver_nl80211_driver_event(struct wpa_driver_nl80211_data *drv,
 					   u8 *data, size_t len)
 {
 	int ret = -1;
-	wpa_printf(MSG_INFO, "wpa_driver_nld80211 vendor event recieved");
 	switch(subcmd) {
 		case QCA_NL80211_VENDOR_SUBCMD_CONFIG_TWT:
 			ret = wpa_driver_nl80211_oem_event(drv, vendor_id, subcmd,
 					data, len);
 			break;
 		default:
-			wpa_printf(MSG_DEBUG, "Unsupported vendor event recieved %d",
-					subcmd);
+			break;
 	}
 	return ret;
 }
@@ -1881,9 +1873,9 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 			return strlen(buf);
 		} else if ((ret == WPA_DRIVER_OEM_STATUS_FAILURE) &&
 							 (status != 0)) {
-			wpa_printf(MSG_DEBUG, "%s: Received error: %d",
-					__func__, ret);
-			return -1;
+			wpa_printf(MSG_DEBUG, "%s: Received error: %d status: %d",
+					__func__, ret, status);
+			return status;
 		}
 		/* else proceed with legacy handling as below */
 	}
