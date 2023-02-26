@@ -188,13 +188,6 @@ static wifi_error get_wifi_interface_info(wifi_interface_link_layer_info *stats,
     len = ((sizeof(stats->country_str) < len) ? sizeof(stats->country_str) : len);
     memcpy(&stats->country_str[0], nla_data(tb_vendor[QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_COUNTRY_STR]),
            len);
-
-    if (!tb_vendor[QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_TS_DUTY_CYCLE])
-    {
-        ALOGE("%s: QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_TS_DUTY_CYCLE not found", __FUNCTION__);
-        return WIFI_ERROR_INVALID_ARGS;
-    }
-    stats->time_slicing_duty_cycle_percent = nla_get_u8(tb_vendor[QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_TS_DUTY_CYCLE]);
 #if QC_HAL_DEBUG
     ALOGV("Mode : %d\n"
           "Mac addr : "
@@ -206,8 +199,7 @@ static wifi_error get_wifi_interface_info(wifi_interface_link_layer_info *stats,
           "BSSID : "
           MAC_ADDR_STR
           "\nAP country str : %c%c%c\n"
-          "Country String for this Association : %c%c%c\n"
-	  "Time slicing duty cycle : %d",
+          "Country String for this Association : %c%c%c",
           stats->mode,
           MAC_ADDR_ARRAY(stats->mac_addr),
           stats->state,
@@ -220,8 +212,7 @@ static wifi_error get_wifi_interface_info(wifi_interface_link_layer_info *stats,
           stats->ap_country_str[2],
           stats->country_str[0],
           stats->country_str[1],
-          stats->country_str[2],
-	  stats->time_slicing_duty_cycle_percent);
+          stats->country_str[2]);
 #endif
     return WIFI_SUCCESS;
 }
