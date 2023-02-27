@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3cfdf185_7fa7234c",
+        "filename": "qcwcn/wifi_hal/llstats.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1000469
+      },
+      "writtenOn": "2023-02-27T12:16:03Z",
+      "side": 0,
+      "message": "aside from changing the log print, also change the return to WIFI_SUCCESS so the wifi service won\u0027t complain about it",
+      "revId": "e34ec645b5bba2e1c81530fc1728cd4a75225f98",
+      "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
+    }
+  ]
+}
