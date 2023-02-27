@@ -52,6 +52,23 @@
       "parentUuid": "65a1ab60_bb4cfd8f",
       "revId": "789bda2623b89d7847ed6a07b478d97c24ff1a70",
       "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69c0a188_627e7a08",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000737
+      },
+      "writtenOn": "2023-02-27T17:33:48Z",
+      "side": 1,
+      "message": "Doing the full reverse is what makes the most sense in my point of view.",
+      "revId": "789bda2623b89d7847ed6a07b478d97c24ff1a70",
+      "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
     }
   ]
 }
