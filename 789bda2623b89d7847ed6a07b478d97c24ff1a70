@@ -69,6 +69,23 @@
       "message": "Doing the full reverse is what makes the most sense in my point of view.",
       "revId": "789bda2623b89d7847ed6a07b478d97c24ff1a70",
       "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84c1bae6_2da5f670",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000469
+      },
+      "writtenOn": "2023-03-01T03:48:18Z",
+      "side": 1,
+      "message": "Please try 28149: wifi_hal: Set default ts duty cycle if not found | https://gerrit.aospa.co/c/AOSPA/android_hardware_qcom_wlan/+/28149",
+      "revId": "789bda2623b89d7847ed6a07b478d97c24ff1a70",
+      "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
     }
   ]
 }
