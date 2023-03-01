@@ -191,10 +191,12 @@ static wifi_error get_wifi_interface_info(wifi_interface_link_layer_info *stats,
 
     if (!tb_vendor[QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_TS_DUTY_CYCLE])
     {
-        ALOGE("%s: QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_TS_DUTY_CYCLE not found", __FUNCTION__);
-        return WIFI_ERROR_INVALID_ARGS;
+        ALOGV("%s: QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_TS_DUTY_CYCLE not found", __FUNCTION__);
+        // If not using time slicing (i.e SCC or DBS), set to 100.
+        stats->time_slicing_duty_cycle_percent = 100;
+    } else {
+        stats->time_slicing_duty_cycle_percent = nla_get_u8(tb_vendor[QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_TS_DUTY_CYCLE]);
     }
-    stats->time_slicing_duty_cycle_percent = nla_get_u8(tb_vendor[QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_TS_DUTY_CYCLE]);
 #if QC_HAL_DEBUG
     ALOGV("Mode : %d\n"
           "Mac addr : "
