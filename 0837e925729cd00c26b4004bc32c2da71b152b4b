@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc0c04c8_dd13b4eb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000737
+      },
+      "writtenOn": "2023-03-02T00:52:35Z",
+      "side": 1,
+      "message": "03-01 20:50:41.230 V/WifiHAL (933): get_wifi_interface_info: QCA_WLAN_VENDOR_ATTR_LL_STATS_IFACE_INFO_TS_DUTY_CYCLE not found",
+      "revId": "0837e925729cd00c26b4004bc32c2da71b152b4b",
+      "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
+    }
+  ]
+}
