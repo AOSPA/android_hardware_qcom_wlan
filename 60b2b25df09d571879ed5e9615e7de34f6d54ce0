@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bf20642_35e050f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000737
+      },
+      "writtenOn": "2023-03-02T02:50:21Z",
+      "side": 1,
+      "message": "Sure, apparently this is fine without having to do the full revert",
+      "revId": "60b2b25df09d571879ed5e9615e7de34f6d54ce0",
+      "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
+    }
+  ]
+}
