@@ -1,0 +1,36 @@
+soong_config_module_type {
+    name: "wifihal_qcom_defaults",
+    module_type: "cc_defaults",
+    config_namespace: "qcom_wifi",
+    variables: [
+        "qcom_wlan_hal",
+    ],
+    properties: [
+        "shared_libs",
+        "whole_static_libs",
+    ],
+}
+
+soong_config_string_variable {
+    name: "qcom_wlan_hal",
+    values: [
+        "qcwcn",
+    ],
+}
+
+wifihal_qcom_defaults {
+    name: "libwifi-hal-qcom",
+    soong_config_variables: {
+        qcom_wlan_hal: {
+            conditions_default: {
+                whole_static_libs: [
+                    "//hardware/qcom/wlan/qcwcn:libwifi-hal-qcom",
+                ],
+                shared_libs: [
+                    "//hardware/qcom/wlan:libcld80211",
+                    "libcrypto",
+                ],
+            },
+        },
+    },
+}
