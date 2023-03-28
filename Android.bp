@@ -1,0 +1,10 @@
+cc_defaults {
+    name: "libwifi-hal-qcom",
+    whole_static_libs: [
+        "//hardware/qcom/wlan/qcwcn:libwifi-hal-qcom",
+    ],
+    shared_libs: [
+        "//hardware/qcom/wlan:libcld80211",
+        "libcrypto",
+    ],
+}
