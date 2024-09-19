@@ -1,12 +1,12 @@
 cc_library_headers {
     name: "libcld80211_headers",
-    vendor: true,
+    vendor_available: true,
     export_include_dirs: ["."],
 }
 
 cc_library_shared {
     name: "libcld80211",
-    vendor: true,
+    vendor_available: true,
     header_libs: ["libcld80211_headers"],
     shared_libs: [
         "libcutils",
