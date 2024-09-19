@@ -30,6 +30,7 @@ cc_library_shared {
 
 cc_library_headers {
     name: "libwifi-hal-ctrl_headers",
+    vendor: true,
     export_include_dirs: ["wifi_hal_ctrl"],
     header_libs: ["libcutils_headers"],
 }
@@ -80,6 +81,7 @@ wifi_hal_cc_defaults {
 // ============================================================
 cc_library_static {
     name: "libwifi-hal-qcom-static",
+    vendor: true,
     defaults: [
         "libwifi-hal-qcom-defaults",
     ],
@@ -149,6 +151,7 @@ cc_library_static {
 
 cc_defaults {
     name: "libwifi-hal-qcom",
+    vendor: true,
     whole_static_libs: [
         "libwifi-hal-qcom-static",
     ],
