@@ -78,8 +78,8 @@ wifi_hal_cc_defaults {
 
 // Make the HAL library
 // ============================================================
-cc_library {
-    name: "libwifi-hal-qcom",
+cc_library_static {
+    name: "libwifi-hal-qcom-static",
     defaults: [
         "libwifi-hal-qcom-defaults",
     ],
@@ -145,4 +145,17 @@ cc_library {
         ],
         cfi: true,
     },
+}
+
+cc_defaults {
+    name: "libwifi-hal-qcom",
+    whole_static_libs: [
+        "libwifi-hal-qcom-static",
+    ],
+    shared_libs: [
+        "libcld80211",
+        "libcrypto",
+        "libpasn",
+        "libnl",
+    ],
 }
