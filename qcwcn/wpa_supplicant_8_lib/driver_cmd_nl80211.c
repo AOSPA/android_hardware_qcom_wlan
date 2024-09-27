@@ -89,16 +89,16 @@
 #define TWT_SETUP_WAKE_INTVL_EXP_MAX            31
 #define TWT_WAKE_INTERVAL_TU_FACTOR		1024
 
-#define TWT_SETUP_STR        "twt_session_setup"
-#define TWT_TERMINATE_STR    "twt_session_terminate"
-#define TWT_PAUSE_STR        "twt_session_pause"
-#define TWT_RESUME_STR       "twt_session_resume"
-#define TWT_NUDGE_STR        "twt_session_nudge"
-#define TWT_GET_PARAMS_STR   "twt_session_get_params"
-#define TWT_GET_STATS_STR    "twt_session_get_stats"
-#define TWT_CLEAR_STATS_STR  "twt_session_clear_stats"
+#define TWT_SETUP_STR        "twt_session_setup "
+#define TWT_TERMINATE_STR    "twt_session_terminate "
+#define TWT_PAUSE_STR        "twt_session_pause "
+#define TWT_RESUME_STR       "twt_session_resume "
+#define TWT_NUDGE_STR        "twt_session_nudge "
+#define TWT_GET_PARAMS_STR   "twt_session_get_params "
+#define TWT_GET_STATS_STR    "twt_session_get_stats "
+#define TWT_CLEAR_STATS_STR  "twt_session_clear_stats "
 #define TWT_GET_CAP_STR      "twt_get_capability"
-#define TWT_SET_PARAM_STR    "twt_set_param"
+#define TWT_SET_PARAM_STR    "twt_set_param "
 
 #define TWT_SETUP_STRLEN         strlen(TWT_SETUP_STR)
 #define TWT_TERMINATE_STR_LEN    strlen(TWT_TERMINATE_STR)
@@ -178,6 +178,10 @@
 #define TWT_PAUSE_RESP_LEN       strlen(TWT_PAUSE_RESP)
 #define TWT_RESUME_RESP_LEN      strlen(TWT_RESUME_RESP)
 #define TWT_NOTIFY_RESP_LEN      strlen(TWT_NOTIFY_RESP)
+
+#define OPM_MODE_DISABLE         0
+#define OPM_MODE_ENABLE          1
+#define OPM_MODE_USER_DEFINED    2
 
 static int twt_async_support = -1;
 
@@ -261,7 +265,7 @@ struct mcc_quota {
 };
 
 
-static char *get_next_arg(char *cmd)
+char *get_next_arg(char *cmd)
 {
 	char *pos = cmd;
 
@@ -2635,50 +2639,40 @@ static const char *twt_status_to_string(enum qca_wlan_vendor_twt_status status)
  * check_for_twt_cmd() - Check if the command string is a TWT command
  * @cmd: Command string
  *
- * This function will identify a TWT operation in the command string
- * and return one of the values in enum qca_wlan_twt_operation.
+ * This function will identify a TWT operation and
+ * return one of the values in enum qca_wlan_twt_operation.
  *
  * Return: A valid TWT opertion if found, or error if not found
  *
  */
-static int check_for_twt_cmd(char **cmd)
+static int check_for_twt_cmd(char *cmd)
 {
-	if (os_strncasecmp(*cmd, TWT_SETUP_STR, TWT_SETUP_STRLEN) == 0) {
-		*cmd += (TWT_SETUP_STRLEN + 1);
+	if (os_strncasecmp(cmd, TWT_SETUP_STR, TWT_SETUP_STRLEN) == 0) {
 		return QCA_WLAN_TWT_SET;
-	} else if (os_strncasecmp(*cmd, TWT_TERMINATE_STR,
+	} else if (os_strncasecmp(cmd, TWT_TERMINATE_STR,
 				  TWT_TERMINATE_STR_LEN) == 0) {
-		*cmd += (TWT_TERMINATE_STR_LEN + 1);
 		return QCA_WLAN_TWT_TERMINATE;
-	} else if (os_strncasecmp(*cmd, TWT_PAUSE_STR, TWT_PAUSE_STR_LEN) == 0) {
-		*cmd += (TWT_PAUSE_STR_LEN + 1);
+	} else if (os_strncasecmp(cmd, TWT_PAUSE_STR, TWT_PAUSE_STR_LEN) == 0) {
 		return QCA_WLAN_TWT_SUSPEND;
-	} else if (os_strncasecmp(*cmd, TWT_RESUME_STR, TWT_RESUME_STR_LEN) == 0) {
-		*cmd += (TWT_RESUME_STR_LEN + 1);
+	} else if (os_strncasecmp(cmd, TWT_RESUME_STR, TWT_RESUME_STR_LEN) == 0) {
 		return QCA_WLAN_TWT_RESUME;
-	} else if (os_strncasecmp(*cmd, TWT_GET_PARAMS_STR,
+	} else if (os_strncasecmp(cmd, TWT_GET_PARAMS_STR,
 				  TWT_GET_PARAMS_STR_LEN) == 0) {
-		*cmd += (TWT_GET_PARAMS_STR_LEN + 1);
 		return QCA_WLAN_TWT_GET;
-	} else if (os_strncasecmp(*cmd, TWT_NUDGE_STR,
+	} else if (os_strncasecmp(cmd, TWT_NUDGE_STR,
 				  TWT_NUDGE_STR_LEN) == 0) {
-		*cmd += (TWT_NUDGE_STR_LEN + 1);
 		return QCA_WLAN_TWT_NUDGE;
-	} else if (os_strncasecmp(*cmd, TWT_GET_STATS_STR,
+	} else if (os_strncasecmp(cmd, TWT_GET_STATS_STR,
 				  TWT_GET_STATS_STR_LEN) == 0) {
-		*cmd += (TWT_GET_STATS_STR_LEN + 1);
 		return QCA_WLAN_TWT_GET_STATS;
-	} else if (os_strncasecmp(*cmd, TWT_CLEAR_STATS_STR,
+	} else if (os_strncasecmp(cmd, TWT_CLEAR_STATS_STR,
 				  TWT_CLEAR_STATS_STR_LEN) == 0) {
-		*cmd += (TWT_CLEAR_STATS_STR_LEN + 1);
 		return QCA_WLAN_TWT_CLEAR_STATS;
-	} else if (os_strncasecmp(*cmd, TWT_GET_CAP_STR,
+	} else if (os_strncasecmp(cmd, TWT_GET_CAP_STR,
 				  TWT_GET_CAP_STR_LEN) == 0) {
-		*cmd += (TWT_GET_CAP_STR_LEN + 1);
 		return QCA_WLAN_TWT_GET_CAPABILITIES;
-	} else if (os_strncasecmp(*cmd, TWT_SET_PARAM_STR,
+	} else if (os_strncasecmp(cmd, TWT_SET_PARAM_STR,
 				  TWT_SET_PARAM_STR_LEN) == 0) {
-		*cmd += (TWT_SET_PARAM_STR_LEN + 1);
 		return QCA_WLAN_TWT_SET_PARAM;
 	} else {
 		wpa_printf(MSG_DEBUG, "Not a TWT command");
@@ -2688,34 +2682,38 @@ static int check_for_twt_cmd(char **cmd)
 
 static u64 get_u64_from_string(char *cmd_string, int *ret)
 {
-	u64 val = 0;
+	long long val = 0;
+	char *endptr = NULL;
 
 	*ret = 0;
 	errno = 0;
-	val = strtoll(cmd_string, NULL, 10);
-	if (errno == ERANGE || (errno != 0 && val == 0)) {
+	val = strtoll(cmd_string, &endptr, 10);
+	if (errno == ERANGE || (errno != 0 && val == 0) ||
+	    *cmd_string == *endptr || val < 0) {
 		wpa_printf(MSG_ERROR, "invalid value");
 		*ret = -EINVAL;
-        }
-	return val;
+	}
+	return (u64)val;
 }
 
 
 static u32 get_u32_from_string(char *cmd_string, int *ret)
 {
-	u32 val = 0;
+	long val = 0;
+	char *endptr = NULL;
 
 	*ret = 0;
 	errno = 0;
-	val = strtol(cmd_string, NULL, 10);
-	if (errno == ERANGE || (errno != 0 && val == 0)) {
+	val = strtol(cmd_string, &endptr, 10);
+	if (errno == ERANGE || (errno != 0 && val == 0) ||
+	    *cmd_string == *endptr || val < 0) {
 		wpa_printf(MSG_ERROR, "invalid value");
 		*ret = -EINVAL;
-        }
-	return val;
+	}
+	return (u32)val;
 }
 
-static s32 get_s32_from_string(char *cmd_string, int *ret)
+s32 get_s32_from_string(char *cmd_string, int *ret)
 {
 	s64 val64 = 0;
 	s32 val = 0;
@@ -2738,16 +2736,34 @@ static s32 get_s32_from_string(char *cmd_string, int *ret)
 
 static u8 get_u8_from_string(char *cmd_string, int *ret)
 {
-	u8 val = 0;
+	long val = 0;
+	char *endptr = NULL;
 
 	*ret = 0;
 	errno = 0;
-	val = strtol(cmd_string, NULL, 10) & 0xFF;
-	if (errno == ERANGE || (errno != 0 && val == 0)) {
+	val = strtol(cmd_string, &endptr, 10);
+	if (errno == ERANGE || (errno != 0 && val == 0) ||
+	    *cmd_string == *endptr || val < 0) {
 		wpa_printf(MSG_ERROR, "invalid value");
 		*ret = -EINVAL;
-        }
-	return val;
+	}
+	return (u8)(val & 0xFF);
+}
+
+static u16 get_u16_from_string(char *cmd_string, int *ret)
+{
+	long val = 0;
+	char *endptr = NULL;
+
+	*ret = 0;
+	errno = 0;
+	val = strtol(cmd_string, &endptr, 10);
+	if (errno == ERANGE || (errno != 0 && val == 0) ||
+	    *cmd_string == *endptr || val < 0) {
+		wpa_printf(MSG_ERROR, "Invalid input to get u16 value");
+		*ret = -EINVAL;
+	}
+	return (u16)(val & 0xFFFF);
 }
 
 char *move_to_next_str(char *cmd)
@@ -2857,11 +2873,11 @@ int process_twt_setup_cmd_string(char *cmd,
 		return -EINVAL;
 
 	wpa_printf(MSG_DEBUG, "process twt setup command string: %s", cmd);
-	while (*cmd == ' ')
-		cmd++;
+
+	cmd = skip_white_space(cmd);
 
 	if (os_strncasecmp(cmd, DIALOG_ID_STR, DIALOG_ID_STR_LEN) == 0) {
-		cmd += (DIALOG_ID_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->dialog_id = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2869,7 +2885,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (os_strncasecmp(cmd, REQ_TYPE_STR, REQ_TYPE_STR_LEN) == 0) {
-		cmd += (REQ_TYPE_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->req_type = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2877,7 +2893,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (os_strncasecmp(cmd, TRIG_TYPE_STR, TRIG_TYPE_STR_LEN) == 0) {
-		cmd += (TRIG_TYPE_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->trig_type = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2890,7 +2906,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, FLOW_TYPE_STR, FLOW_TYPE_STR_LEN) == 0) {
-		cmd += (FLOW_TYPE_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->flow_type = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2903,7 +2919,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, WAKE_INTR_EXP_STR, WAKE_INTR_EXP_STR_LEN) == 0) {
-		cmd += (WAKE_INTR_EXP_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->wake_intr_exp = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2918,7 +2934,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, PROTECTION_STR, PROTECTION_STR_LEN) == 0) {
-		cmd += (PROTECTION_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->protection = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2931,7 +2947,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, WAKE_TIME_STR, WAKE_TIME_STR_LEN) == 0) {
-		cmd += (WAKE_TIME_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->wake_time = get_u32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2939,7 +2955,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, WAKE_DUR_STR, WAKE_DUR_STR_LEN) == 0) {
-		cmd += (WAKE_DUR_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->wake_dur = get_u32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2956,7 +2972,7 @@ int process_twt_setup_cmd_string(char *cmd,
 
 	if (strncmp(cmd, WAKE_INTR_MANTISSA_STR,
 		    WAKE_INTR_MANTISSA_STR_LEN) == 0) {
-		cmd += (WAKE_INTR_MANTISSA_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->wake_intr_mantissa = get_u32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2971,7 +2987,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, BROADCAST_STR, BROADCAST_STR_LEN) == 0) {
-		cmd += (BROADCAST_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->bcast = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2984,7 +3000,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, MIN_WAKE_INTVL_STR, MIN_WAKE_INTVL_STR_LEN) == 0) {
-		cmd += (MIN_WAKE_INTVL_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->min_wake_intvl = get_u32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -2992,7 +3008,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, MAX_WAKE_INTVL_STR, MAX_WAKE_INTVL_STR_LEN) == 0) {
-		cmd += (MAX_WAKE_INTVL_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->max_wake_intvl = get_u32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3000,7 +3016,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, MIN_WAKE_DUR_STR, MIN_WAKE_DUR_STR_LEN) == 0) {
-		cmd += (MIN_WAKE_DUR_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->min_wake_duration = get_u32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3008,7 +3024,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, MAX_WAKE_DUR_STR, MAX_WAKE_DUR_STR_LEN) == 0) {
-		cmd += (MAX_WAKE_DUR_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->max_wake_duration = get_u32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3016,7 +3032,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, WAKE_TSF_STR, WAKE_TSF_STR_LEN) == 0) {
-		cmd += (WAKE_TSF_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->wake_tsf = get_u64_from_string(cmd, &ret);
 		if(ret < 0)
 			return ret;
@@ -3024,7 +3040,7 @@ int process_twt_setup_cmd_string(char *cmd,
 	}
 
 	if (strncmp(cmd, ANNOUNCE_TIMEOUT_STR, ANNOUNCE_TIMEOUT_STR_LEN) == 0) {
-		cmd += (ANNOUNCE_TIMEOUT_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		twt_setup_params->announce_timeout_us =
 					get_u32_from_string(cmd, &ret);
 		if (ret < 0)
@@ -3198,11 +3214,10 @@ static int prepare_twt_terminate_nlmsg(struct nl_msg *nlmsg, char *cmd)
 	if(check_cmd_input(cmd))
 		return -EINVAL;
 
-	while(*cmd == ' ')
-		cmd++;
+	cmd = skip_white_space(cmd);
 
 	if (os_strncasecmp(cmd, DIALOG_ID_STR, DIALOG_ID_STR_LEN) == 0) {
-		cmd += (DIALOG_ID_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		dialog_id = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3246,11 +3261,10 @@ static int prepare_twt_pause_nlmsg(struct nl_msg *nlmsg, char *cmd)
 	if(check_cmd_input(cmd))
 		return -EINVAL;
 
-	while(*cmd == ' ')
-		cmd++;
+	cmd = skip_white_space(cmd);
 
 	if (os_strncasecmp(cmd, DIALOG_ID_STR, DIALOG_ID_STR_LEN) == 0) {
-		cmd += (DIALOG_ID_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		dialog_id = get_u8_from_string(cmd, &ret);
 		if(ret < 0)
 			return ret;
@@ -3308,21 +3322,20 @@ int process_twt_resume_cmd_string(char *cmd,
 	if(check_cmd_input(cmd))
 		return -EINVAL;
 
-	while(*cmd == ' ')
-		cmd++;
+	cmd = skip_white_space(cmd);
 
 	if (os_strncasecmp(cmd, DIALOG_ID_STR, DIALOG_ID_STR_LEN) != 0) {
 		wpa_printf(MSG_ERROR, "TWT: dialog ID parameter is required");
 		return -EINVAL;
 	}
-	cmd += (DIALOG_ID_STR_LEN + 1);
+	cmd = move_to_next_str(cmd);
 	resume_params->dialog_id = get_u8_from_string(cmd, &ret);
 	if (ret < 0)
 		return ret;
 	cmd = move_to_next_str(cmd);
 
 	if (os_strncasecmp(cmd, NEXT_TWT_STR, NEXT_TWT_STR_LEN) == 0) {
-		cmd += (NEXT_TWT_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		resume_params->next_twt = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3331,7 +3344,7 @@ int process_twt_resume_cmd_string(char *cmd,
 	}
 
 	if (os_strncasecmp(cmd, NEXT2_TWT_STR, NEXT2_TWT_STR_LEN) == 0) {
-		cmd += (NEXT2_TWT_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		resume_params->next2_twt = get_u32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3343,7 +3356,7 @@ int process_twt_resume_cmd_string(char *cmd,
 		wpa_printf(MSG_ERROR, "TWT: next_twt_size parameter is required");
 		return -EINVAL;
 	}
-	cmd += (NEXT_TWT_SIZE_STR_LEN + 1);
+	cmd = move_to_next_str(cmd);
 	resume_params->next_twt_size = get_u32_from_string(cmd, &ret);
 	if (ret < 0)
 		return ret;
@@ -3418,21 +3431,20 @@ int process_twt_nudge_cmd_string(char *cmd,
 	if(check_cmd_input(cmd))
 		return -EINVAL;
 
-	while(*cmd == ' ')
-		cmd++;
+	cmd = skip_white_space(cmd);
 
 	if (os_strncasecmp(cmd, DIALOG_ID_STR, DIALOG_ID_STR_LEN) != 0) {
 		wpa_printf(MSG_ERROR, "TWT: dialog_id parameter is required");
 		return -EINVAL;
 	}
-	cmd += (DIALOG_ID_STR_LEN + 1);
+	cmd = move_to_next_str(cmd);
 	nudge_params->dialog_id = get_u8_from_string(cmd, &ret);
 	if (ret < 0)
 		return ret;
 	cmd = move_to_next_str(cmd);
 
 	if (os_strncasecmp(cmd, PAUSE_DURATION_STR, PAUSE_DURATION_STR_LEN) == 0) {
-		cmd += (PAUSE_DURATION_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		nudge_params->wake_time = get_u32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3444,14 +3456,14 @@ int process_twt_nudge_cmd_string(char *cmd,
 		wpa_printf(MSG_ERROR, "TWT: next_twt_size parameter is required");
 		return -EINVAL;
 	}
-	cmd += (NEXT_TWT_SIZE_STR_LEN + 1);
+	cmd = move_to_next_str(cmd);
 	nudge_params->next_twt_size = get_u32_from_string(cmd, &ret);
 	if (ret < 0)
 		return ret;
 	cmd = move_to_next_str(cmd);
 
 	if (os_strncasecmp(cmd, "sp_start_offset", strlen("sp_start_offset")) == 0) {
-		cmd += (strlen("sp_start_offset") + 1);
+		cmd = move_to_next_str(cmd);
 		nudge_params->sp_start_offset = get_s32_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3543,11 +3555,10 @@ int process_twt_set_param_cmd_string(char *cmd,
 	if (check_cmd_input(cmd))
 		return -EINVAL;
 
-	while (*cmd == ' ')
-		cmd++;
+	cmd = skip_white_space(cmd);
 
 	if (os_strncasecmp(cmd, AP_AC_VALUE_STR, AP_AC_VALUE_STR_LEN) == 0) {
-		cmd += (AP_AC_VALUE_STR_LEN + 1);
+		cmd = move_to_next_str(cmd);
 		set_params->ap_ac_value = get_u8_from_string(cmd, &ret);
 		wpa_printf(MSG_DEBUG, "TWT: AP AC VALUE: %d", set_params->ap_ac_value);
 		if (ret < 0)
@@ -3611,8 +3622,7 @@ static int prepare_twt_clear_stats_nlmsg(struct nl_msg *nlmsg, char *cmd)
 	u8 dialog_id;
 	int ret = 0;
 
-	while(*cmd == ' ')
-		cmd++;
+	cmd = skip_white_space(cmd);
 
 	if (nla_put_u8(nlmsg, QCA_WLAN_VENDOR_ATTR_CONFIG_TWT_OPERATION,
 		       QCA_WLAN_TWT_CLEAR_STATS)) {
@@ -3626,8 +3636,7 @@ static int prepare_twt_clear_stats_nlmsg(struct nl_msg *nlmsg, char *cmd)
 		return -EINVAL;
 
 	if (os_strncasecmp(cmd, DIALOG_ID_STR, DIALOG_ID_STR_LEN) == 0) {
-		cmd += DIALOG_ID_STR_LEN + 1;
-
+		cmd = move_to_next_str(cmd);
 		dialog_id = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3663,8 +3672,7 @@ static int prepare_twt_get_stats_nlmsg(struct nl_msg *nlmsg, char *cmd)
 	u8 dialog_id;
 	int ret = 0;
 
-	while(*cmd == ' ')
-		cmd++;
+	cmd = skip_white_space(cmd);
 
 	if (nla_put_u8(nlmsg, QCA_WLAN_VENDOR_ATTR_CONFIG_TWT_OPERATION,
 		       QCA_WLAN_TWT_GET_STATS)) {
@@ -3678,8 +3686,7 @@ static int prepare_twt_get_stats_nlmsg(struct nl_msg *nlmsg, char *cmd)
 		return -EINVAL;
 
 	if (os_strncasecmp(cmd, DIALOG_ID_STR, DIALOG_ID_STR_LEN) == 0) {
-		cmd += DIALOG_ID_STR_LEN + 1;
-
+		cmd = move_to_next_str(cmd);
 		dialog_id = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3708,8 +3715,7 @@ static int prepare_twt_get_params_nlmsg(struct nl_msg *nlmsg, char *cmd)
 	int ret = 0;
 	uint8_t peer_mac[MAC_ADDR_LEN];
 
-	while(*cmd == ' ')
-		cmd++;
+	cmd = skip_white_space(cmd);
 
 	if (nla_put_u8(nlmsg, QCA_WLAN_VENDOR_ATTR_CONFIG_TWT_OPERATION,
 		       QCA_WLAN_TWT_GET)) {
@@ -3723,8 +3729,7 @@ static int prepare_twt_get_params_nlmsg(struct nl_msg *nlmsg, char *cmd)
 		return -EINVAL;
 
 	if (os_strncasecmp(cmd, DIALOG_ID_STR, DIALOG_ID_STR_LEN) == 0) {
-		cmd += DIALOG_ID_STR_LEN + 1;
-
+		cmd = move_to_next_str(cmd);
 		dialog_id = get_u8_from_string(cmd, &ret);
 		if (ret < 0)
 			return ret;
@@ -3743,8 +3748,7 @@ static int prepare_twt_get_params_nlmsg(struct nl_msg *nlmsg, char *cmd)
 
 
 	if (os_strncasecmp(cmd, MAC_ADDRESS_STR, MAC_ADDR_STR_LEN) == 0) {
-		cmd += MAC_ADDR_STR_LEN + 1;
-
+		cmd = move_to_next_str(cmd);
 		if (convert_string_to_bytes(peer_mac, cmd, MAC_ADDR_LEN) !=
 		    MAC_ADDR_LEN) {
 			wpa_printf(MSG_ERROR, "TWT: invalid mac address");
@@ -3873,16 +3877,19 @@ static int pack_nlmsg_twt_params(struct nl_msg *twt_nl_msg, char *cmd,
 
 char *result_copy_to_buf(char *src, char *dst_buf, int *dst_len)
 {
-	int str_len, remaining = 0;
+	size_t str_len, remaining = 0;
+
+	if (!dst_buf || *dst_len < 0)
+		return NULL;
 
 	remaining = *dst_len;
 	str_len = strlen(src);
-	remaining = remaining - (str_len + 1);
 
-	if (remaining <= 0) {
-		wpa_printf(MSG_ERROR, "destination buffer length not enough");
+	if (remaining > 0 && (remaining - 1) > str_len)
+		remaining = remaining - (str_len + 1);
+	else
 		return NULL;
-	}
+
 	os_memcpy(dst_buf, src, str_len);
 
 	*dst_len = remaining;
@@ -5233,17 +5240,7 @@ static int wpa_driver_form_clear_mcc_quota_msg(struct i802_bss *bss,
 
 	/* First comes interface name - optional */
 	if (os_strncasecmp(cmd, "iface", 5) == 0) {
-		char *iface;
 		cmd = move_to_next_str(cmd);
-		/* null terminate the iface name in the cmd string */
-		iface = strchr(cmd, ' ');
-		if (iface == NULL) {
-			wpa_printf(MSG_ERROR, "mcc_quota: iface is not found"
-				   " in cmd string");
-			return -EINVAL;
-		}
-		*iface = '\0';
-		iface = cmd;
 		errno = 0;
 		if_index = if_nametoindex(cmd);
 		if (if_index == 0) {
@@ -5252,7 +5249,6 @@ static int wpa_driver_form_clear_mcc_quota_msg(struct i802_bss *bss,
 			return -EINVAL;
 		}
 		wpa_printf(MSG_INFO, "mcc_quota: ifindex %u", if_index);
-		cmd += strlen(iface) + 1;
 	}
 
 	nlmsg = prepare_vendor_nlmsg(drv, bss->ifname,
@@ -5444,6 +5440,7 @@ int wpa_driver_cmd_send_mcc_quota(struct i802_bss *bss,
 {
 	int ret;
 
+	cmd = skip_white_space(cmd);
 	wpa_printf(MSG_INFO, "mcc_quota: %s", cmd);
 
 	if (os_strncasecmp(cmd, "set", 3) == 0) {
@@ -6089,6 +6086,486 @@ nlmsg_fail:
 	return ret;
 }
 
+static int string_to_bitmap(u32 *dest, size_t dlen, char *src)
+{
+	int i, idx;
+	u8 rem;
+	size_t slen = 0;
+	size_t max_len_per_idx = sizeof(u32) * 2;
+	char buff[(sizeof(u32) * 2) + 1] = {0};
+	char *sptr;
+	char *endptr = NULL;
+
+	if (strncasecmp(src, "0X", 2) == 0)
+		src += 2;
+
+	sptr = src;
+
+	while (*sptr && *sptr != ' ') {
+		sptr++;
+		slen++;
+	}
+
+	idx = (slen / max_len_per_idx) + ((slen % max_len_per_idx) > 0 ? 1 : 0);
+
+	if (idx > dlen) {
+		wpa_printf(MSG_ERROR, "rate_mask : src is too long");
+		return -EINVAL;
+	}
+
+	for (i = (idx - 1); i >= 0 ; i--) {
+		rem = (slen % max_len_per_idx);
+
+		if (rem > 0) {
+			memcpy(buff, src, rem);
+			src += rem;
+			slen -= rem;
+		} else if ((slen / max_len_per_idx) > 0) {
+			memcpy(buff, src, max_len_per_idx);
+			src += max_len_per_idx;
+			slen -= max_len_per_idx;
+		}
+
+		dest[i] = strtol(buff, &endptr, 16);
+		if (errno == ERANGE || (errno != 0 && dest[i] == 0) ||
+		    *buff == *endptr) {
+			wpa_printf(MSG_ERROR,
+				   "rate_mask:invalid value\n");
+			return -EINVAL;
+		}
+
+		memset(buff, 0, sizeof(buff));
+	}
+
+	return 0;
+}
+
+/**
+ *wpa_driver_rate_mask_config()- Sends the ratemask params to the driver.
+ *
+ * @bss: nl data
+ * @cmd: Ratemask vendor command
+ *
+ * Return: returns 0 on Success, error code on invalid response.
+ */
+static int wpa_driver_rate_mask_config(struct i802_bss *bss, char *cmd)
+{
+	struct wpa_driver_nl80211_data *drv = bss->drv;
+	struct nl_msg *nlmsg = NULL;
+	struct nlattr *attr, *mask_attr_list;
+	struct nlattr *mask_list;
+	int ret = -EINVAL, status = 0;
+	u32 buffer[RATEMASK_PARAMS_TYPE_MAX] = {0};
+	u8 type, value;
+	int i = 0;
+
+	cmd = skip_white_space(cmd);
+
+	nlmsg = prepare_vendor_nlmsg(drv, bss->ifname,
+				     QCA_NL80211_VENDOR_SUBCMD_RATEMASK_CONFIG);
+	if (!nlmsg) {
+		wpa_printf(MSG_ERROR,
+			   "rate_mask: Failed to allocate nl message");
+		return -ENOMEM;
+	}
+
+	attr = nla_nest_start(nlmsg, NL80211_ATTR_VENDOR_DATA);
+	if (!attr) {
+		wpa_printf(MSG_ERROR, "rate_mask: Failed to alloc nlattr");
+		ret = -ENOMEM;
+		goto fail;
+	}
+
+	mask_attr_list =
+	       nla_nest_start(nlmsg, QCA_WLAN_VENDOR_ATTR_RATEMASK_PARAMS_LIST);
+	if (!mask_attr_list) {
+		wpa_printf(MSG_ERROR, "rate_mask: Failed alloc mask_attr_list");
+		ret = -ENOMEM;
+		goto fail;
+	}
+
+	do {
+		mask_list =
+		      nla_nest_start(nlmsg, i++);
+		if (!mask_list) {
+			wpa_printf(MSG_ERROR,
+				   "rate_mask: Failed alloc mask_list");
+			ret = -ENOMEM;
+			goto fail;
+		}
+
+		if (os_strncasecmp(cmd, "phymode ", 8) == 0) {
+			cmd += 8;
+			cmd = skip_white_space(cmd);
+		} else {
+			wpa_printf(MSG_ERROR, "rate_mask:Invalid phymode");
+			ret = -EINVAL;
+			goto fail;
+		}
+
+		value = get_u8_from_string(cmd, &status);
+
+		if (status < 0) {
+			wpa_printf(MSG_ERROR, "rate_mask: Invalid type");
+			ret = -EINVAL;
+			goto fail;
+		}
+
+		switch (value) {
+		case 0:
+			type = QCA_WLAN_RATEMASK_PARAMS_TYPE_CCK_OFDM;
+			break;
+		case 1:
+			type = QCA_WLAN_RATEMASK_PARAMS_TYPE_HT;
+			break;
+		case 2:
+			type = QCA_WLAN_RATEMASK_PARAMS_TYPE_VHT;
+			break;
+		case 3:
+			type = QCA_WLAN_RATEMASK_PARAMS_TYPE_HE;
+			break;
+		default:
+			wpa_printf(MSG_ERROR,
+				   "rate_mask: Invalid rate_mask type");
+			ret = -EINVAL;
+			goto fail;
+		}
+
+		cmd = move_to_next_str(cmd);
+
+		if (os_strncasecmp(cmd, "ratemask ", 9) == 0) {
+			cmd += 9;
+			cmd = skip_white_space(cmd);
+			ret = string_to_bitmap(buffer, RATEMASK_PARAMS_TYPE_MAX,
+					       cmd);
+			if (ret != 0) {
+				wpa_printf(MSG_ERROR,
+					   "rate_mask:str to bitmap conv fail");
+				goto fail;
+			}
+		} else {
+			wpa_printf(MSG_ERROR, "rate_mask:Invalid ratemask");
+			ret = -EINVAL;
+			goto fail;
+		}
+
+		ret = nla_put_u8(nlmsg,
+				 QCA_WLAN_VENDOR_ATTR_RATEMASK_PARAMS_TYPE,
+				 type);
+		if (ret) {
+			wpa_printf(MSG_ERROR,
+				   "Failed to add rate_mask_type attr %d", ret);
+			goto fail;
+		}
+
+		ret = nla_put(nlmsg,
+			      QCA_WLAN_VENDOR_ATTR_RATEMASK_PARAMS_BITMAP,
+			      sizeof(buffer), buffer);
+		if (ret) {
+			wpa_printf(MSG_ERROR,
+				   "rate_mask: Failed bitmap attr %d", ret);
+			goto fail;
+		}
+
+		cmd = move_to_next_str(cmd);
+		memset(buffer, 0, sizeof(buffer));
+
+		nla_nest_end(nlmsg, mask_list);
+
+	} while (os_strncasecmp(cmd, "phymode ", 8) == 0);
+
+	nla_nest_end(nlmsg, mask_attr_list);
+	nla_nest_end(nlmsg, attr);
+
+	ret = send_nlmsg((struct nl_sock *)drv->global->nl, nlmsg, NULL, NULL);
+
+	if (ret)
+		wpa_printf(MSG_ERROR, "rate_mask: Error sending nlmsg %d", ret);
+
+	return ret;
+fail:
+	nlmsg_free(nlmsg);
+	return ret;
+}
+
+static int wpa_driver_cfg_listen_interval_cmd(struct i802_bss *bss, char *cmd)
+{
+	struct wpa_driver_nl80211_data *drv;
+	struct nl_msg *nlmsg;
+	struct nlattr *attr;
+	int ret;
+	u32 listen_interval = 0;
+
+	if (!bss || !bss->drv || !cmd) {
+		wpa_printf(MSG_ERROR, "%s:Invalid arguments", __func__);
+		return -EINVAL;
+	}
+	cmd = skip_white_space(cmd);
+	if (*cmd == '\0') {
+		wpa_printf(MSG_ERROR, "listen interval values missing");
+		return -EINVAL;
+	}
+	drv = bss->drv;
+	listen_interval = get_u32_from_string(cmd, &ret);
+	if (ret < 0)
+		return ret;
+	if (listen_interval < CONFIG_LISTEN_INTERVAL_MIN ||
+			listen_interval > CONFIG_LISTEN_INTERVAL_MAX) {
+		wpa_printf(MSG_ERROR, "listen interval values to be in range of %d-%d",
+			CONFIG_LISTEN_INTERVAL_MIN, CONFIG_LISTEN_INTERVAL_MAX);
+		return -EINVAL;
+	}
+	nlmsg = prepare_vendor_nlmsg(drv, bss->ifname,
+				     QCA_NL80211_VENDOR_SUBCMD_SET_WIFI_CONFIGURATION);
+	if (!nlmsg) {
+		wpa_printf(MSG_ERROR, "Fail to allocate nlmsg for Listen Interval cmd");
+		return -ENOMEM;
+	}
+
+	attr = nla_nest_start(nlmsg, NL80211_ATTR_VENDOR_DATA);
+	if (!attr) {
+		ret = -ENOMEM;
+		wpa_printf(MSG_ERROR, "Fail to create Listen Interval cmd nl attribute");
+		goto nlmsg_fail;
+	}
+	if (nla_put_u32(nlmsg, QCA_WLAN_VENDOR_ATTR_CONFIG_LISTEN_INTERVAL, listen_interval)) {
+		ret = -ENOMEM;
+		wpa_printf(MSG_ERROR, "Fail to put listen interval value");
+		goto nlmsg_fail;
+	}
+	nla_nest_end(nlmsg, attr);
+
+	ret = send_nlmsg((struct nl_sock *)drv->global->nl, nlmsg, NULL, NULL);
+	if (ret) {
+		wpa_printf(MSG_ERROR, "Fail to send listen_interval nlmsg, error:%d", ret);
+		return ret;
+	}
+	return 0;
+nlmsg_fail:
+	nlmsg_free(nlmsg);
+	return ret;
+}
+
+static int wpa_driver_set_ul_mu_cfg(struct i802_bss *bss, char *cmd)
+{
+	struct wpa_driver_nl80211_data *drv = bss->drv;
+	struct nlattr *attr;
+	struct nl_msg *nlmsg = NULL;
+	int ret = 0;
+	u8 ulmu;
+	enum qca_ul_mu_config val;
+
+	ulmu = get_u8_from_string(cmd, &ret);
+	if (ret || ulmu > 1) {
+		wpa_printf(MSG_ERROR, "set_ul_mu_cfg: input error");
+		return -EINVAL;
+	}
+
+	if (ulmu)
+		val = QCA_UL_MU_ENABLE;
+	else
+		val = QCA_UL_MU_SUSPEND;
+
+	nlmsg =
+	prepare_vendor_nlmsg(drv, bss->ifname,
+			     QCA_NL80211_VENDOR_SUBCMD_SET_WIFI_CONFIGURATION);
+	if (!nlmsg) {
+		wpa_printf(MSG_ERROR, "set_ul_mu_cfg: Failed to alloc nl msg");
+		return -ENOMEM;
+	}
+
+	attr = nla_nest_start(nlmsg, NL80211_ATTR_VENDOR_DATA);
+	if (!attr) {
+		wpa_printf(MSG_ERROR, "set_ul_mu_config: Failed to alloc attr");
+		ret = -ENOMEM;
+		goto fail;
+	}
+
+	ret = nla_put_u8(nlmsg, QCA_WLAN_VENDOR_ATTR_CONFIG_UL_MU_CONFIG, val);
+	if (ret) {
+		wpa_printf(MSG_ERROR, "set_ul_mu_cfg:Fail to put ulmu");
+		goto fail;
+	}
+
+	nla_nest_end(nlmsg, attr);
+
+	ret = send_nlmsg((struct nl_sock *)drv->global->nl, nlmsg, NULL, NULL);
+	if (ret)
+		wpa_printf(MSG_ERROR, "set_ul_mu_cfg: Error sending nlmsg");
+
+	return ret;
+fail:
+	nlmsg_free(nlmsg);
+	return ret;
+}
+
+static uint8_t wpa_driver_convert_opm_mode(uint8_t opm_mode)
+{
+	switch (opm_mode) {
+	case 0:
+		return QCA_WLAN_VENDOR_OPM_MODE_DISABLE;
+	case 1:
+		return QCA_WLAN_VENDOR_OPM_MODE_ENABLE;
+	case 2:
+		return QCA_WLAN_VENDOR_OPM_MODE_USER_DEFINED;
+	default:
+		return opm_mode;
+	}
+}
+
+static int wpa_driver_ps_config_cmd(struct i802_bss *bss, char *cmd)
+{
+	struct wpa_driver_nl80211_data *drv;
+	struct nl_msg *nlmsg;
+	struct nlattr *attr;
+	u8 opm_mode;
+	u16 ps_ito, spec_wake;
+	int ret;
+
+	drv = bss->drv;
+	cmd = skip_white_space(cmd);
+	if (*cmd == '\0') {
+		wpa_printf(MSG_ERROR, "mode and config values are missing");
+		return -EINVAL;
+	}
+	opm_mode = get_u8_from_string(cmd, &ret);
+	if (ret < 0) {
+		wpa_printf(MSG_ERROR, "ps_config: Invalid opm_mode");
+		return -EINVAL;
+	}
+
+	if (opm_mode == OPM_MODE_USER_DEFINED) {
+		cmd = move_to_next_str(cmd);
+		if (*cmd == '\0') {
+			wpa_printf(MSG_ERROR, "ps_ito is missing in command");
+			return -EINVAL;
+		}
+		ps_ito = get_u16_from_string(cmd, &ret);
+		if (ret < 0) {
+			wpa_printf(MSG_ERROR, "Invalid ps_ito value");
+			return -EINVAL;
+		}
+		cmd = move_to_next_str(cmd);
+		if (*cmd == '\0') {
+			wpa_printf(MSG_ERROR,
+				   "spec_wake is missing in command");
+			return -EINVAL;
+		}
+		spec_wake = get_u16_from_string(cmd, &ret);
+		if (ret < 0) {
+			wpa_printf(MSG_ERROR, "Invalid spec_wake value");
+			return -EINVAL;
+		}
+	}
+
+	nlmsg = prepare_vendor_nlmsg(drv, bss->ifname,
+				     QCA_NL80211_VENDOR_SUBCMD_SET_WIFI_CONFIGURATION);
+	if (!nlmsg) {
+		wpa_printf(MSG_ERROR,
+			   "Failed to allocate nlmsg for set_opm_mode cmd");
+		return -ENOMEM;
+	}
+
+	attr = nla_nest_start(nlmsg, NL80211_ATTR_VENDOR_DATA);
+	if (!attr) {
+		ret = -ENOMEM;
+		wpa_printf(MSG_ERROR,
+			   "Failed to create nl attr for set_opm_mode cmd");
+		goto nlmsg_fail;
+	}
+	if (nla_put_u8(nlmsg,
+		       QCA_WLAN_VENDOR_ATTR_CONFIG_OPTIMIZED_POWER_MANAGEMENT,
+		       wpa_driver_convert_opm_mode(opm_mode))) {
+		ret = -ENOMEM;
+		wpa_printf(MSG_ERROR, "Failed to put power_save_mode value");
+		goto nlmsg_fail;
+	}
+	if (opm_mode == OPM_MODE_USER_DEFINED) {
+		if (nla_put_u16(nlmsg, QCA_WLAN_VENDOR_ATTR_CONFIG_OPM_ITO,
+				ps_ito)) {
+			ret = -ENOMEM;
+			wpa_printf(MSG_ERROR, "Failed to put ps_ito value");
+			goto nlmsg_fail;
+		}
+		if (nla_put_u16(nlmsg,
+				QCA_WLAN_VENDOR_ATTR_CONFIG_OPM_SPEC_WAKE_INTERVAL,
+				spec_wake)) {
+			ret = -ENOMEM;
+			wpa_printf(MSG_ERROR, "Failed to put spec_wake value");
+			goto nlmsg_fail;
+		}
+	}
+	nla_nest_end(nlmsg, attr);
+
+	ret = send_nlmsg((struct nl_sock *)drv->global->nl, nlmsg, NULL, NULL);
+	if (ret) {
+		wpa_printf(MSG_ERROR,
+			   "Failed to send set_opm_mode nlmsg, error:%d", ret);
+		return ret;
+	}
+	return 0;
+nlmsg_fail:
+	nlmsg_free(nlmsg);
+	return ret;
+}
+
+static int wpa_driver_cfg_coex_traffic_shaping(struct i802_bss *bss, char *cmd)
+{
+	struct wpa_driver_nl80211_data *drv;
+	struct nl_msg *nlmsg;
+	struct nlattr *attr;
+	int ret;
+	u8 traffic_shaping_mode;
+
+	cmd = skip_white_space(cmd);
+	if (*cmd == '\0') {
+		wpa_printf(MSG_ERROR, "traffic shaping mode is missing");
+		return -EINVAL;
+	}
+
+	drv = bss->drv;
+	traffic_shaping_mode = get_u8_from_string(cmd, &ret);
+	if (ret < 0) {
+		wpa_printf(MSG_ERROR, "traffic shaping mode is invalid");
+		return ret;
+	}
+
+	if (traffic_shaping_mode > 1) {
+		wpa_printf(MSG_ERROR, "Invalid traffic_shaping_mode %d",
+			   traffic_shaping_mode);
+		return -EINVAL;
+	}
+
+	nlmsg = prepare_vendor_nlmsg(drv, bss->ifname,
+				     QCA_NL80211_VENDOR_SUBCMD_SET_WIFI_CONFIGURATION);
+	if (!nlmsg) {
+		wpa_printf(MSG_ERROR, "Failed to allocate nlmsg for traffic_shaping_mode cmd");
+		return -ENOMEM;
+	}
+
+	attr = nla_nest_start(nlmsg, NL80211_ATTR_VENDOR_DATA);
+	if (!attr) {
+		ret = -ENOMEM;
+		wpa_printf(MSG_ERROR, "Failed to create traffic_shaping_mode cmd nl attribute");
+		goto nlmsg_fail;
+	}
+	if (nla_put_u8(nlmsg, QCA_WLAN_VENDOR_ATTR_CONFIG_COEX_TRAFFIC_SHAPING_MODE,
+		       traffic_shaping_mode)) {
+		ret = -ENOMEM;
+		wpa_printf(MSG_ERROR, "Failed to put traffic_shaping_mode value");
+		goto nlmsg_fail;
+	}
+	nla_nest_end(nlmsg, attr);
+
+	ret = send_nlmsg((struct nl_sock *)drv->global->nl, nlmsg, NULL, NULL);
+	if (ret)
+		wpa_printf(MSG_ERROR, "Failed to send traffic_shaping_mode nlmsg, error:%d", ret);
+	return ret;
+nlmsg_fail:
+	nlmsg_free(nlmsg);
+	return ret;
+}
+
 int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 				  size_t buf_len )
 {
@@ -6157,7 +6634,7 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 	} else if (os_strncasecmp(cmd, "CSI", 3) == 0) {
 		cmd += 3;
 		return wpa_driver_handle_csi_cmd(bss, cmd, buf, buf_len, &status);
-	} else if(os_strncasecmp(cmd, "GETSTATSBSSINFO", 15) == 0) {
+	} else if (os_strncasecmp(cmd, "GETSTATSBSSINFO", 15) == 0) {
 
 		struct resp_info info,info2;
 		struct nl_msg *nlmsg;
@@ -6176,12 +6653,11 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 			if(p != NULL)
 				memcpy(info.country, (p+1), strlen(p+1)+1);//length of p including null
 		}
-		cmd += 16;
 		os_memset(buf, 0, buf_len);
 
 		u8 mac[MAC_ADDR_LEN];
 
-		cmd = skip_white_space(cmd);
+		cmd = move_to_next_str(cmd);
 
 		if (strlen(cmd) >= MAC_ADDR_LEN * 2 + MAC_ADDR_LEN - 1
 		    && convert_string_to_bytes(mac, cmd, MAC_ADDR_LEN) > 0) {
@@ -6355,10 +6831,11 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 		}
 
 		return WPA_DRIVER_OEM_STATUS_SUCCESS;
-	} else if ((ret = check_for_twt_cmd(&cmd)) != TWT_CMD_NOT_EXIST) {
+	} else if ((ret = check_for_twt_cmd(cmd)) != TWT_CMD_NOT_EXIST) {
 		enum qca_wlan_twt_operation twt_oper = ret;
 		u8 is_twt_feature_supported = 0;
 
+		cmd = move_to_next_str(cmd);
 		if (oem_cb_table) {
 			for (lib_n = 0;
 			     oem_cb_table[lib_n].wpa_driver_driver_cmd_oem_cb != NULL;
@@ -6381,14 +6858,14 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 			if (ret)
 				ret = os_snprintf(buf, buf_len, "TWT failed for operation %d", twt_oper);
 		}
-	} else if (os_strncasecmp(cmd, "MCC_QUOTA", 9) == 0) {
+	} else if (os_strncasecmp(cmd, "MCC_QUOTA ", 10) == 0) {
 		/* DRIVER MCC_QUOTA set iface <name> quota <val>
 		 * DRIVER MCC_QUOTA clear iface <name>
 		 */
 		/* Move cmd by string len and space */
 		cmd += 10;
 		return wpa_driver_cmd_send_mcc_quota(priv, cmd);
-	} else if (os_strncasecmp(cmd, "FLUSH_QUEUE_CONFIG", 18) == 0) {
+	} else if (os_strncasecmp(cmd, "FLUSH_QUEUE_CONFIG ", 19) == 0) {
 		/* DRIVER FLUSH_QUEUE_CONFIG set peer <mac addr> policy <val>
 		 * tid <tid mask> ac <ac mask>
 		 */
@@ -6420,6 +6897,42 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 		 */
 		cmd += 11;
 		return wpa_driver_tsf_cmd(priv, cmd, buf, buf_len);
+	} else if (os_strncasecmp(cmd, "SET_TX_RATEMASK ", 16) == 0) {
+		/*
+		 * DRIVER SET_TX_RATEMASK phymode <phy_mode> ratemask
+		 * <txrate_mask>…phymode <phy_mode> ratemask <tx_rate_mask>
+		 */
+		cmd += 16;
+		return wpa_driver_rate_mask_config(bss, cmd);
+	} else if (os_strncasecmp(cmd, "SET_LISTEN_INTERVAL ", 20) == 0) {
+		/* DRIVER SET_LISTEN_INTERVAL <listen_interval> */
+		cmd += 20;
+		return wpa_driver_cfg_listen_interval_cmd(bss, cmd);
+	} else if (os_strncasecmp(cmd, "SET_UL_MU_CONFIG ", 17) == 0) {
+		/* Usage: DRIVER SET_UL_MU_CONFIG <value>
+		 * value 0 - All UL_MU transmission are suspended by STA
+		 * value 1 - All UL_MU transmission are enabled by STA
+		 */
+		cmd += 17;
+		return wpa_driver_set_ul_mu_cfg(bss, cmd);
+	} else if (os_strncasecmp(cmd, "SET_PS_CONFIG ", 14) == 0) {
+		/* DRIVER SET_PS_CONFIG <opm_mode> <ps_ito> <spec_wake>
+		 * opm_mode  - Optimized power management Mode
+		 *     value 0 - Disable OPM
+		 *     value 1 - Enable OPM
+		 *     value 2 - User defined OPM
+		 * ps_ito    - Power save inactivity timeout
+		 * spec_wake - Speculative wake interval
+		 */
+		cmd += 14;
+		return wpa_driver_ps_config_cmd(bss, cmd);
+	} else if (os_strncasecmp(cmd, "COEX_TRAFFIC_SHAPING_MODE ", 26) == 0) {
+		/* DRIVER COEX_TRAFFIC_SHAPING_MODE <mode>
+		 * <mode> = 0 (All traffic shaping disabled and fixed arbitration config)
+		 * <mode> = 1 (enable coex algos)
+		 */
+		cmd += 26;
+		return wpa_driver_cfg_coex_traffic_shaping(bss, cmd);
 	} else { /* Use private command */
 		memset(&ifr, 0, sizeof(ifr));
 		memset(&priv_cmd, 0, sizeof(priv_cmd));
