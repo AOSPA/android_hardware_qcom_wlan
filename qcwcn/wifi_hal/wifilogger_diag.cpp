@@ -2703,7 +2703,7 @@ wifi_error diag_message_handler(hal_info *info, nl_msg *msg)
                 return WIFI_ERROR_UNKNOWN;
             }
             if (genlh->cmd != WLAN_NL_MSG_OEM && !clh) {
-                ALOGE("Invalid data received from driver");
+                //ALOGE("Invalid data received from driver");
                 return WIFI_ERROR_UNKNOWN;
             }
 
