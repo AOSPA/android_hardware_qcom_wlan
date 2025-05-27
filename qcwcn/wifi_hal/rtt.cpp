@@ -82,6 +82,9 @@ wifi_error wifi_get_rtt_capabilities(wifi_interface_handle iface,
 wifi_error wifi_get_rtt_capabilities_v3(wifi_interface_handle iface,
                                      wifi_rtt_capabilities_v3 *capabilities)
 {
+#ifdef DISABLE_RTTV3
+    return WIFI_ERROR_NOT_SUPPORTED;
+#else
     wifi_error ret;
     lowi_cb_table_t *lowiWifiHalApi = NULL;
 
@@ -116,6 +119,7 @@ wifi_error wifi_get_rtt_capabilities_v3(wifi_interface_handle iface,
             "returned error:%d. Exit.", ret);
 
     return ret;
+#endif // DISABLE_RTTV3
 }
 
 
