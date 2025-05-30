@@ -79,6 +79,6 @@ cc_library_static {
         },
     },
     defaults: [
-        "wpa_supplicant_cflags_default",
+        "wpa_supplicant_cflags_defaults",
     ],
 }
