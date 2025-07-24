@@ -57,7 +57,6 @@ soong_config_module_type {
     bool_variables: [
         "mac_privacy_logging", // CONFIG_MAC_PRIVACY_LOGGING
         "target_supports_wearables", // TARGET_SUPPORTS_WEARABLES
-        "disable_rttv3", // DISABLE_RTTV3
     ],
     variables: [
         "libpasn_support", //$(wildcard external/wpa_supplicant_8/src/pasn/pasn_common.c)
@@ -89,9 +88,6 @@ wifi_hal_cc_defaults {
         },
         target_supports_wearables: {
             cflags: ["-DTARGET_SUPPORTS_WEARABLES"],
-        },
-        disable_rttv3: {
-            cflags: ["-DDISABLE_RTTV3"],
         },
         libpasn_support: {
             true: {
