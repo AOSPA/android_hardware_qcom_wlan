@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a41edeac_89c97cbc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001176
+      },
+      "writtenOn": "2026-07-07T06:32:54Z",
+      "side": 1,
+      "message": "https://git.codelinaro.org/clo/la/platform/external/wpa_supplicant_8/-/blob/LA.QSSI.17.0.r1-08000-qssi.0/wpa_supplicant/Android.bp?ref_type\u003dtags#L975",
+      "revId": "ffb189473ba139ba3b9c32935d689d810ea89f86",
+      "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
+    }
+  ]
+}
