@@ -796,7 +796,8 @@ void nan_rx_mgmt_auth(wifi_handle handle, const u8 *frame, size_t len)
             }
             ptksa_cache_add(info->secure_nan->ptksa, info->secure_nan->own_addr,
                             peer->bssid, pasn_get_cipher(pasn), nanPMKLifetime,
-                            pasn_get_ptk(pasn), NULL, NULL, pasn_get_akmp(pasn));
+                            pasn_get_ptk(pasn), NULL, NULL, pasn_get_akmp(pasn),
+                            pasn->auth_alg);
             memset(pasn_get_ptk(pasn), 0, sizeof(struct wpa_ptk));
         } else if (ret == -1 || mgmt->u.auth.status_code) {
             NanPairingConfirmInd evt;
@@ -837,7 +838,8 @@ nan_pairing_add_peer_to_list(struct wpa_secure_nan *secure_nan, u8 *mac)
            entry->pairing_instance_id = secure_nan->pairing_id++;
            pasn_register_callbacks(entry->pasn, secure_nan->cb_ctx,
                                    nan_send_tx_mgmt,
-                                   nan_pairing_validate_custom_pmkid);
+                                   nan_pairing_validate_custom_pmkid,
+                                   NULL, NULL);
            return entry;
        }
     }
@@ -860,7 +862,7 @@ nan_pairing_add_peer_to_list(struct wpa_secure_nan *secure_nan, u8 *mac)
     }
 
     pasn_register_callbacks(mentry->pasn, secure_nan->cb_ctx, nan_send_tx_mgmt,
-                            nan_pairing_validate_custom_pmkid);
+                            nan_pairing_validate_custom_pmkid, NULL, NULL);
     wpa_pasn_reset(mentry->pasn);
     add_to_list(&mentry->list, &secure_nan->peers);
     return mentry;
@@ -1137,7 +1139,7 @@ int nan_send_tx_mgmt(void *ctx, const u8 *frame_buf, size_t frame_len,
         ptksa_cache_add(info->secure_nan->ptksa, info->secure_nan->own_addr,
                         peer->bssid,pasn_get_cipher(pasn), 43200,
                         pasn_get_ptk(pasn), NULL, NULL,
-                        pasn_get_akmp(pasn));
+                        pasn_get_akmp(pasn), pasn->auth_alg);
         nan_pairing_set_keys_from_cache(handle, info->secure_nan->own_addr,
                                         peer->bssid,pasn_get_cipher(pasn),
                                         pasn_get_akmp(pasn), peer->peer_role);
